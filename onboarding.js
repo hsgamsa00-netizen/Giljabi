@@ -53,7 +53,7 @@ window.Onboarding = (function () {
             <div class="oi-cap">주제로 찾기 · 사례로 점검하기 · 적발 관계망</div></div>
           <div class="oi-arrow" style="--d:.85s"></div>
           <div class="oi-stage" style="--d:1s"><div class="oi-badge">STEP 3 · 📂 탐색</div><div class="oi-icon">🔎</div><div class="oi-label">유사 선례 확인</div>
-            <div class="oi-card"><div style="font-weight:700;font-size:13px;margin-bottom:4px">계약입찰 › 계약·조달</div><div style="font-size:13px;margin-bottom:4px">분할 수의계약 부적정</div><div style="display:flex;gap:5px;align-items:center"><span class="disp ju">주의요구</span><span class="yr">2024</span></div><div style="display:flex;gap:5px;align-items:center;margin-top:4px"><span class="disp mun">문책요구</span><span class="yr">2023</span></div></div>
+            <div class="oi-card"><div style="font-weight:700;font-size:13px;margin-bottom:4px">계약·조달</div><div style="font-size:13px;margin-bottom:4px">분할 수의계약 부적정</div><div style="display:flex;gap:5px;align-items:center"><span class="disp ju">주의요구</span><span class="yr">2024</span></div><div style="display:flex;gap:5px;align-items:center;margin-top:4px"><span class="disp mun">문책요구</span><span class="yr">2023</span></div></div>
             <div class="oi-cap">분야→위반유형으로 개별 선례</div></div>
           <div class="oi-arrow" style="--d:1.35s"></div>
           <div class="oi-stage" style="--d:1.5s"><div class="oi-badge">STEP 4</div><div class="oi-icon">📌</div><div class="oi-label">근거 확보</div>

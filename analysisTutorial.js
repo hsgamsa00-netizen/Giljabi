@@ -18,7 +18,7 @@ window.AnalysisTutorial = (function () {
     {
       t: "🔗 무엇을 → 어떻게 — 위반유형을 고르면 처분이 따라온다",
       lead: "왼쪽 <b>위반유형 막대를 클릭</b>하면 오른쪽에 그 유형의 <b>실제 처분 분포</b>(주의·통보·문책 등)가 바로 나타납니다. 막대를 다시 누르면 그 <b>선례 목록</b>으로 이어집니다.",
-      ex: `<div class="at-mini"><div class="at-mt">① 「검사·감독」 1,641건 선택</div><div class="at-mbar"><span class="s1" style="width:85%"></span><span class="s2" style="width:11%"></span></div><div class="at-mc">② 주의 40% · 통보 45% · 문책 이상 11%</div></div>`
+      ex: `<div class="at-mini"><div class="at-mt">① 「검사·감독」 선택</div><div class="at-mbar"><span class="s1" style="width:85%"></span><span class="s2" style="width:11%"></span></div><div class="at-mc">② 주의 40% · 통보 45% · 문책 이상 11%</div></div>`
     },
     {
       t: "🔎 누가·심화 — 기관계열별, 특화 위반유형",
@@ -43,7 +43,7 @@ window.AnalysisTutorial = (function () {
     {
       t: "😈 다중관점 — 반대 선례로 상대 반론 미리 점검 (악마의 대변인 — 반대편 자처·약점 점검)",
       lead: "이 사안을 <b>반대로 보는 실제 선례</b> — 같은 유형의 경한 처분·면책 사례 — 를 꺼내 과중한 의율을 견제합니다.",
-      ex: `<div class="at-mini"><div class="at-mt">계약·조달 — 643건</div><div class="at-mbar"><span class="s1" style="width:78%"></span><span class="s2" style="width:18%"></span></div><div class="at-mc">경한 처분 78% · 징계계열 18% · 면책·참작 선례 22건</div></div>`
+      ex: `<div class="at-mini"><div class="at-mt">계약·조달 — 선례 다수</div><div class="at-mbar"><span class="s1" style="width:78%"></span><span class="s2" style="width:18%"></span></div><div class="at-mc">경한 처분 78% · 징계계열 18% · 면책·참작 선례 있음</div></div>`
     },
     {
       t: "🤔 되묻기 — 적신호를 점검 질문으로",

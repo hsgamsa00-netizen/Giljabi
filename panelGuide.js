@@ -11,7 +11,7 @@ window.PanelGuide = (function () {
         {
           t: "🗂️ 분야로 좁히기 — 왼쪽 큰 버튼",
           lead: "왼쪽의 큰 버튼이 <b>감사 분야</b>입니다. 누르면 그 분야의 <b>위반유형</b>이 아래에 펼쳐지고, 가운데 목록이 그 범위로 좁혀집니다.",
-          ex: `<div class="at-row"><span class="at-pill on">계약입찰</span><span class="at-pill">재정회계예산</span><span class="at-pill">공사·시설</span></div><div class="at-arr">↓</div><div class="at-mc">선택한 분야의 위반유형 칩이 펼쳐지고 목록이 좁혀집니다.</div>`
+          ex: `<div class="at-row"><span class="at-pill on">계약·조달</span><span class="at-pill">재정·세무·회계</span><span class="at-pill">인허가·개발</span></div><div class="at-arr">↓</div><div class="at-mc">선택한 분야의 위반유형 칩이 펼쳐지고 목록이 좁혀집니다.</div>`
         },
         {
           t: "🔎 검색 + 필터로 더 좁히기",

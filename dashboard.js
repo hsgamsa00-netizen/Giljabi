@@ -238,10 +238,24 @@ window.Dashboard = (function () {
     const rfCol = rfs.length
       ? `<div class="cbr-lab">🚩 함께 점검할 적신호 (빈도순)</div>${rfs.slice(0, Math.max(8, aks.length)).map(([r, n]) => `<div class="rfitem">${esc(r)}${n > 1 ? ` <span class="muted">(${n})</span>` : ""}</div>`).join("")}`
       : `<div class="cbr-lab">🚩 적신호</div><div class="muted" style="font-size:12px">적신호 정보 없음</div>`;
+    // 파생 요약(좌측 빈 공간 활용) — 예상 처분 분포 + 자주 적용된 위반법령
+    const _dc = {}; top.forEach(c => dispListOf(c).forEach(d => { _dc[d] = (_dc[d] || 0) + 1; }));
+    const _dtot = Object.values(_dc).reduce((a, b) => a + b, 0) || 1;
+    let _dseg = "", _dleg = ""; DORD.forEach(([nm, cls]) => { if (_dc[nm]) { const p = _dc[nm] / _dtot * 100;
+      _dseg += `<span class="seg-${cls}" style="width:${p}%" title="${nm} ${_dc[nm]}건 (${Math.round(p)}%)"></span>`;
+      _dleg += `<span><i class="seg-${cls}"></i>${nm} ${_dc[nm]}</span>`; } });
+    const _hard = (_dc["징계·문책요구"] || 0) + (_dc["고발"] || 0) + (_dc["수사의뢰"] || 0);
+    const _lc = {}; top.forEach(c => (Array.isArray(c.위반법령) ? c.위반법령 : (c.위반법령 ? [c.위반법령] : [])).forEach(l => { const k = String(l).replace(/\s*제?\s*\d.*$/, "").trim(); if (k && k.length > 1) _lc[k] = (_lc[k] || 0) + 1; }));
+    const _laws = Object.entries(_lc).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    const extra = `<div class="cbr-extra">`
+      + `<div class="cbr-lab">📊 예상 처분 분포 <span class="muted">처분요구 ${fmt(_dtot)}건 · 문책 이상 ${Math.round(_hard / _dtot * 100)}%</span></div>`
+      + `<div class="stack">${_dseg}</div><div class="leg">${_dleg}</div>`
+      + (_laws.length ? `<div class="cbr-lab" style="margin-top:11px">⚖️ 자주 적용된 위반법령</div><div class="cbr-exlaw">${_laws.map(([l, n]) => `<span title="${esc(l)}">${esc(l)} <b>${n}</b></span>`).join("")}</div>` : "")
+      + `</div>`;
     out.innerHTML = `<div class="cbr-grid">
         <div class="cbr-col"><div class="cbr-head">유사 선례 <b>${fmt(top.length)}</b>건 <span class="muted">종합 — 공통 착안점·적신호</span></div>${warn}<div class="cbr-lab">공통 착안점 (빈도순)</div>${aks.length ? aks.map(([a, n]) => `<div class="aki">${esc(a)}${n > 1 ? ` <span class="muted">(${n})</span>` : ""}</div>`).join("") : '<div class="muted" style="font-size:12px">착안점 정보 없음</div>'}</div>
         <div class="cbr-col rf">${rfCol}</div>
-      </div>`;
+      </div>` + extra;
     const _vc = {}; top.forEach(c => (c.위반유형 || []).forEach(v => { if (!String(v).startsWith("(")) _vc[v] = (_vc[v] || 0) + 1; }));
     const _dom = Object.entries(_vc).sort((a, b) => b[1] - a[1])[0];   // 주 위반유형 자동 판정 → 반론·검증
     if (_dom && rout) { rout.innerHTML = '<div class="panel cbr rebut-panel">' + renderRebut(_dom[0], top) + '</div>';   // 전체 폭 하단 패널(펼침=아래로 성장·우측 빔 해소)

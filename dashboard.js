@@ -419,14 +419,19 @@ window.Dashboard = (function () {
         fs.forEach(f => fcnt[f] = (fcnt[f] || 0) + 1);
         for (let i = 0; i < fs.length; i++) for (let j = i + 1; j < fs.length; j++) { const a = fs[i] < fs[j] ? fs[i] : fs[j], b = fs[i] < fs[j] ? fs[j] : fs[i]; (fco[a] || (fco[a] = {}))[b] = (fco[a][b] || 0) + 1; } });
       const top = Object.keys(fcnt).map(k => ({ k, n: fcnt[k] })).sort((a, b) => b.n - a.n).slice(0, 10);
-      const N = top.length, W = 560, H = 460, cx = W / 2, cy = H / 2 - 6, R = Math.min(cx, cy) - 78;
-      const pos = top.map((s, i) => { const a = (i / N) * 2 * Math.PI - Math.PI / 2; return { x: +(cx + R * Math.cos(a)).toFixed(1), y: +(cy + R * Math.sin(a)).toFixed(1), a, s }; });
+      const N = top.length, W = 720, H = 460;
+      const nodes = top.map(s => ({ k: s.k, n: s.n }));
+      nodes.forEach(nd => { nd.r = Math.min(11, 5 + Math.sqrt(nd.n) * 0.12); nd.lw = (String(nd.k).length + String(fmt(nd.n)).length + 1) * 13; });   // 물리속성: 반경 + 라벨폭(15px 추정·아래 중앙)
+      const ni = {}; nodes.forEach((nd, i) => ni[nd.k] = i);
       let edges = [];
-      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) { const A = top[i].k, B = top[j].k, lo = A < B ? A : B, hi = A < B ? B : A; const cnt = (fco[lo] && fco[lo][hi]) || 0; if (cnt > 0) edges.push({ i, j, cnt }); }
-      edges = edges.sort((a, b) => b.cnt - a.cnt).slice(0, 16);
-      const wmax = Math.max.apply(null, edges.map(e => e.cnt).concat(1));
-      const edgeSvg = edges.map(e => `<line x1="${pos[e.i].x}" y1="${pos[e.i].y}" x2="${pos[e.j].x}" y2="${pos[e.j].y}" class="reledge" stroke-width="${(0.6 + 2.4 * e.cnt / wmax).toFixed(1)}" data-i="${e.i}" data-j="${e.j}"><title>${esc(top[e.i].k)} ↔ ${esc(top[e.j].k)} · 함께 ${fmt(e.cnt)}건</title></line>`).join("");
-      const nodeSvg = pos.map((p, i) => { const right = Math.cos(p.a) >= -0.01; const r = Math.min(11, 5 + Math.sqrt(p.s.n) * 0.12); return `<g class="relnode fld" data-i="${i}" data-fld="${esc(p.s.k)}" tabindex="0" role="button"><circle cx="${p.x}" cy="${p.y}" r="${r.toFixed(1)}"></circle><text x="${(p.x + (right ? r + 5 : -r - 5)).toFixed(1)}" y="${(p.y + 3.5).toFixed(1)}" text-anchor="${right ? "start" : "end"}" class="rellbl">${esc(p.s.k)} ${fmt(p.s.n)}</text><title>${esc(p.s.k)} · ${fmt(p.s.n)}건 · 클릭하면 크게 보기</title></g>`; }).join("");
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) { const A = top[i].k, B = top[j].k, lo = A < B ? A : B, hi = A < B ? B : A; const cnt = (fco[lo] && fco[lo][hi]) || 0; if (cnt > 0) edges.push({ a: A, b: B, w: cnt }); }
+      edges = edges.sort((a, b) => b.w - a.w).slice(0, 16);
+      if (window.GraphView && GraphView.layout) GraphView.layout(nodes, edges, W, H);
+      else nodes.forEach((nd, i) => { const a = (i / N) * 6.2832 - 1.5708, R = Math.min(W, H) / 2 - 100; nd.x = W / 2 + R * Math.cos(a); nd.y = H / 2 + R * Math.sin(a); });
+      const idx = {}; nodes.forEach(nd => idx[nd.k] = nd);
+      const wmax = Math.max.apply(null, edges.map(e => e.w).concat(1));
+      const edgeSvg = edges.map(e => { const A = idx[e.a], B = idx[e.b]; return `<line x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" class="reledge" stroke-width="${(0.6 + 2.4 * e.w / wmax).toFixed(1)}" data-i="${ni[e.a]}" data-j="${ni[e.b]}"><title>${esc(e.a)} ↔ ${esc(e.b)} · 함께 ${fmt(e.w)}건</title></line>`; }).join("");
+      const nodeSvg = nodes.map((nd, i) => `<g class="relnode fld" data-i="${i}" data-fld="${esc(nd.k)}" tabindex="0" role="button"><circle cx="${nd.x.toFixed(1)}" cy="${nd.y.toFixed(1)}" r="${nd.r.toFixed(1)}"></circle><text x="${nd.x.toFixed(1)}" y="${(nd.y + nd.r + 13).toFixed(1)}" text-anchor="middle" class="rellbl">${esc(nd.k)} ${fmt(nd.n)}</text><title>${esc(nd.k)} · ${fmt(nd.n)}건 · 클릭하면 크게 보기</title></g>`).join("");
       container.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="relsvg" role="img" aria-label="분야 적발 관계망(미리보기) — 클릭하면 크게">${edgeSvg}${nodeSvg}</svg>`;
       const _gvOpen = () => { if (window.GraphView) GraphView.open({ onSearch: openCbrFor }); };   // 미리보기 클릭 = 분야망 확대 모달
       { const gb = document.getElementById("gvOpen"); if (gb) gb.onclick = _gvOpen; }

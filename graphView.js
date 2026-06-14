@@ -63,14 +63,23 @@ window.GraphView = (function () {
     return { nodes: top.map(k => ({ k, n: subN[k], kind: "sub" })), edges: edgesAmong(co, top, 3, null) };
   }
 
-  // ----- force 배치 -----
+  // ----- force 배치(노드 물리속성 + 라벨 박스 충돌 → 겹침 0 보장) -----
+  // 각 노드는 nd.r(원 반경)·nd.lw(라벨 폭) 보유 가정. 라벨은 원 아래 중앙.
   function layout(nodes, edges, W, H) {
     const N = nodes.length; if (!N) return;
     nodes.forEach((nd, i) => { const a = (i / N) * 6.2832 - 1.57; nd.x = W / 2 + Math.min(W, H) / 3.0 * Math.cos(a); nd.y = H / 2 + Math.min(W, H) / 3.0 * Math.sin(a); });
     const idx = {}; nodes.forEach((nd, i) => { idx[nd.k] = i; });
-    const k = Math.sqrt(W * H / N) * 0.86;   // 반발력 강화(노드·라벨 겹침 완화)
+    const hw = nodes.map(nd => Math.max(nd.r || 8, (nd.lw || 40) / 2) + 5);   // 반폭(원·라벨 중 큰 쪽 + 여백)
+    const hh = nodes.map(nd => (nd.r || 8) + 17);                              // 반높이(원 + 아래 라벨 + 여백)
+    const collide = () => { let m = 0; for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const vx = nodes[i].x - nodes[j].x, vy = nodes[i].y - nodes[j].y;
+      const ox = (hw[i] + hw[j]) - Math.abs(vx), oy = (hh[i] + hh[j]) - Math.abs(vy);
+      if (ox > 0 && oy > 0) { m++;
+        if (ox <= oy) { const p = (ox / 2 + 0.5) * (vx < 0 ? -1 : 1); nodes[i].x += p; nodes[j].x -= p; }
+        else { const p = (oy / 2 + 0.5) * (vy < 0 ? -1 : 1); nodes[i].y += p; nodes[j].y -= p; } } } return m; };
+    const k = Math.sqrt(W * H / N) * 0.86;
     const wmax = Math.max.apply(null, edges.map(e => e.w).concat(1));
-    const IT = 340;
+    const IT = 360;
     for (let it = 0; it < IT; it++) {
       const t = 1 - it / IT, cap = 18 * t + 0.8;
       const dx = new Array(N).fill(0), dy = new Array(N).fill(0);
@@ -91,8 +100,12 @@ window.GraphView = (function () {
         const dm = Math.sqrt(dx[i] * dx[i] + dy[i] * dy[i]) || 0.001, s = Math.min(dm, cap) / dm;
         nodes[i].x += dx[i] * s; nodes[i].y += dy[i] * s;
       }
+      collide();   // 매 반복 라벨 박스 충돌 해소
     }
-    nodes.forEach(nd => { nd.x = Math.max(70, Math.min(W - 70, nd.x)); nd.y = Math.max(44, Math.min(H - 56, nd.y)); });   // 라벨 공간 확보
+    for (let p = 0; p < 80 && collide() > 0; p++) {}   // 잔여 충돌 완전 해소
+    nodes.forEach((nd, i) => { nd.x = Math.max(hw[i] + 2, Math.min(W - hw[i] - 2, nd.x)); nd.y = Math.max((nd.r || 8) + 4, Math.min(H - hh[i] - 2, nd.y)); });
+    for (let p = 0; p < 40 && collide() > 0; p++) {   // 클램프 후 재해소 + 경계 재클램프
+      nodes.forEach((nd, i) => { nd.x = Math.max(hw[i] + 2, Math.min(W - hw[i] - 2, nd.x)); nd.y = Math.max((nd.r || 8) + 4, Math.min(H - hh[i] - 2, nd.y)); }); }
   }
 
   // ----- 모달·상태 -----
@@ -140,6 +153,7 @@ window.GraphView = (function () {
 
   function draw() {
     const g = graphSet();
+    g.nodes.forEach(nd => { nd.r = nd.kind === "field" ? Math.min(20, 8 + Math.sqrt(nd.n) * 0.22) : Math.min(16, 4.5 + Math.sqrt(nd.n) * 0.55); nd.lw = (String(nd.k).length + String(fmt(nd.n)).length + 1) * 8; });   // 물리속성: 반경 + 라벨폭(11px 추정)
     layout(g.nodes, g.edges, W, H);
     const idx = {}; g.nodes.forEach(nd => { idx[nd.k] = nd; });
     const wmax = Math.max.apply(null, g.edges.map(e => e.w).concat(1));
@@ -259,5 +273,5 @@ window.GraphView = (function () {
     if (D().ovOpen) D().ovOpen("graph", () => modal.classList.remove("on"));
     draw();
   }
-  return { open };
+  return { open, layout };
 })();

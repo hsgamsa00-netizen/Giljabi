@@ -75,7 +75,7 @@
         <span class="dn-title">📝 개발자 노트 <span class="dn-sub">알려진 문제점 · 개선 중</span></span>
         <button class="dn-x" id="devNoteClose" type="button" aria-label="닫기">✕</button>
       </div>
-      <div class="dn-meta">v0.8.135</div>
+      <div class="dn-meta">v0.8.136</div>
       <div class="dn-lead">현재 확인·개선 중인 사항입니다.</div>
       <ul class="dnlist">
         <li>
@@ -87,9 +87,34 @@
   </div>
 </div>
 
+<!-- 분류 기준 한눈에 (개념 정립 모달 — 도움말 📐 / 주제로찾기 ⓘ에서 열림) -->
+<div class="dnmodal" id="conceptModal">
+  <div class="dn-card concept-card" role="dialog" aria-modal="true" aria-label="분류 기준 한눈에">
+    <div class="dn-bar"></div>
+    <div class="dn-body">
+      <div class="dn-head">
+        <span class="dn-title">📐 분류 기준 한눈에 <span class="dn-sub">무엇으로 찾을지</span></span>
+        <button class="dn-x" id="conceptClose" type="button" aria-label="닫기">✕</button>
+      </div>
+      <div class="cm-intro">한 <b>사례(카드 1장)</b>에 아래 4개 꼬리표가 붙습니다 — 어느 것으로든 찾을 수 있어요.</div>
+      <ul class="cm-list">
+        <li><span class="cm-ax">분야 <span class="cm-n">20</span></span><span class="cm-q">어느 업무에서?</span><span class="cm-ex">계약·조달 · 인사·채용 · 환경·에너지…</span></li>
+        <li><span class="cm-ax">위반유형 <span class="cm-n">11</span></span><span class="cm-q">어떤 종류의 잘못?</span><span class="cm-ex">검사·감독 · 문서 · 청렴·행위…</span></li>
+        <li><span class="cm-ax">주제·표식</span><span class="cm-q">구체적으로 무슨 사안?</span><span class="cm-ex">수의계약 · 채용 · 음주 · 고발…</span></li>
+        <li><span class="cm-ax">처분</span><span class="cm-q">결과(처분)는?</span><span class="cm-ex">주의 · 통보 · 징계 · 고발…</span></li>
+      </ul>
+      <div class="cm-foot">
+        <div>· <b>사례(=선례)</b>는 분류가 아니라 결과물 한 건(지적사항 1건) — <b>“사례 많은 순”은 정렬</b>입니다.</div>
+        <div>· <b>착안점·적신호</b>는 사례에서 뽑은 점검 포인트·경고신호(찾은 뒤 보는 것).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- 도움말 메뉴 (헤더 ❓ 드롭다운 — 어느 탭에서나 상시) -->
 <div class="setpanel helpmenu" id="helpMenu">
   <h4>❓ 도움말 <span class="hmsub">언제든 여기서</span></h4>
+  <div class="hmguide"><div class="hmglab">개념 <span>분류 기준</span></div><div class="hmchips"><button class="hmchip" data-concept type="button">📐 분류 기준 한눈에</button></div></div>
   <div class="hmguide">
     <div class="hmglab">처음 익히기 <span>사례로 익히기</span></div>
     <div class="hmchips">
@@ -114,8 +139,8 @@
   <div class="grid">
     <div class="col left">
       <div class="fldgrid" id="fldGrid"></div>
-      <div class="violsub" id="violSub"><div class="vh" id="violSubH">위반유형</div><div class="vchips" id="violChips"></div><div class="vhint">※ 한 사례가 여러 유형·분야에 해당될 수 있어, 합계가 분야 건수보다 많을 수 있습니다(중복 집계).</div></div>
-      <div class="sec">주제 · 표식 <span class="scnt2">중점점검 · 형사연계 · 세부주제</span></div>
+      <div class="violsub" id="violSub"><div class="vh"><span id="violSubH">위반유형</span> <span class="bhint" title="감사원 표준 ‘잘못’ 분류(11종) — 어떤 종류의 잘못인지" aria-hidden="true">ⓘ</span></div><div class="vchips" id="violChips"></div><div class="vhint">※ 한 사례가 여러 유형·분야에 해당될 수 있어, 합계가 분야 건수보다 많을 수 있습니다(중복 집계).</div></div>
+      <div class="sec">주제 · 표식 <span class="bhint" title="구체 사안 태그 — 무슨 사안인지(세부주제·중점점검·형사연계)" aria-hidden="true">ⓘ</span> <span class="scnt2">중점점검 · 형사연계 · 세부주제</span></div>
       <div class="pickwrap">
         <button class="pickbtn" id="pickBtn" type="button"><span class="ph" id="pickLabel">＋ 주제·표식으로 거르기</span><span class="pickcar">▾</span></button>
         <div class="pop" id="pickPop" hidden>
@@ -224,7 +249,7 @@
         </aside>
       </div>
       <div id="rebutOut" class="rebutout"></div>
-      <div id="saTreePop" class="satreepop" hidden><div class="satreepop-card"><div class="satreepop-h"><b>📂 주제로 찾기</b> <span class="muted">주제를 누르면 유사 선례·처분 분포·착안점 검색</span><button id="saTreeClose" class="satreepop-x" type="button" title="닫기">✕</button></div><div class="sapop-sec"><div class="sapop-lab">⚡ 자주 적발된 주제 <span class="muted">정렬 기준(사실 축)</span></div><div class="sasort" id="saSort"></div><div class="sachips" id="saChips"></div></div><div class="sapop-sec"><div class="sapop-lab">📁 분야별 전체 <span class="muted">감사원 공개문 분류 · 펼쳐 선택</span></div><div class="satree" id="saTree" role="tree" aria-label="분야별 소주제"></div></div><div class="sahint">※ 건수 = 감사원 공개문 집계 사례 수이며 중요도·난이도가 아닙니다. 위 ‘자주 적발된 주제’는 <b>전체 기준</b>, 분야 펼침 속 건수는 <b>그 분야 안 기준</b>입니다 — 한 사례가 여러 분야에 속할 수 있어 둘이 다를 수 있습니다.</div></div></div>
+      <div id="saTreePop" class="satreepop" hidden><div class="satreepop-card"><div class="satreepop-h"><b>📂 주제로 찾기</b> <span class="muted">주제를 누르면 유사 선례·처분 분포·착안점 검색</span><button id="saTreeClose" class="satreepop-x" type="button" title="닫기">✕</button></div><div class="satreepop-note">📁 <b>분야</b>=업무 영역 · ⚡ <b>주제</b>=구체 사안 · “사례 많은 순”=정렬 <button class="cm-link" data-concept type="button">분류 기준 ⓘ</button></div><div class="sapop-sec"><div class="sapop-lab">⚡ 자주 적발된 주제 <span class="muted">정렬 기준(사실 축)</span></div><div class="sasort" id="saSort"></div><div class="sachips" id="saChips"></div></div><div class="sapop-sec"><div class="sapop-lab">📁 분야별 전체 <span class="muted">감사원 공개문 분류 · 펼쳐 선택</span></div><div class="satree" id="saTree" role="tree" aria-label="분야별 소주제"></div></div><div class="sahint">※ 건수 = 감사원 공개문 집계 사례 수이며 중요도·난이도가 아닙니다. 위 ‘자주 적발된 주제’는 <b>전체 기준</b>, 분야 펼침 속 건수는 <b>그 분야 안 기준</b>입니다 — 한 사례가 여러 분야에 속할 수 있어 둘이 다를 수 있습니다.</div></div></div>
     </div>
   </div>
 </div>
@@ -249,7 +274,7 @@
 <!-- 정보 -->
 <div class="aboutmodal" id="aboutModal">
   <div class="about-card" role="dialog" aria-modal="true" aria-label="정보 및 출처">
-    <div class="about-h"><div><span class="at">감사 길잡이</span><span class="av">v0.8.135</span></div><button class="ax" id="aboutClose" title="닫기">✕</button></div>
+    <div class="about-h"><div><span class="at">감사 길잡이</span><span class="av">v0.8.136</span></div><button class="ax" id="aboutClose" title="닫기">✕</button></div>
     <div class="about-by">🏛 화성특례시 감사관 제작</div>
     <div class="about-desc">감사원 공개 감사결과를 사례 카드로 정리해 착안점·유사 처분례·근거 법령을 빠르게 찾는 <b>개인 업무 참고용</b> 도구입니다.</div>
     <div class="about-desc about-casual">바이브 코딩이란 걸 알게 돼서 만들었습니다. 개선점 제안이나 버그 제보는 언제나 환영입니다.</div>

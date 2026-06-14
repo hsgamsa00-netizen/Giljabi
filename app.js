@@ -25,6 +25,7 @@
     // ── ESC = 모달 닫기(우선) → 데스크톱 상세 슬라이드오버 닫기(P1 2영역) ──
     if (e.key === "Escape") {
       const _dn = document.getElementById("devNote"); if (_dn && _dn.classList.contains("on")) { _dn.classList.remove("on"); e.preventDefault(); return; }
+      const _cm = document.getElementById("conceptModal"); if (_cm && _cm.classList.contains("on")) { _cm.classList.remove("on"); e.preventDefault(); return; }
       const D = window.Digest;
       if (D && D.isModalOpen && D.isModalOpen()) { D.closeCaseModal(); e.preventDefault(); return; }
       if (document.body.classList.contains("mob-detail") && !window.matchMedia("(max-width:768px)").matches) {
@@ -180,6 +181,14 @@
     devNoteBtn.onclick = (e) => { e.stopPropagation(); setPanel.classList.remove("on"); helpMenu.classList.remove("on"); devNote.classList.add("on"); };
     const dnx = document.getElementById("devNoteClose"); if (dnx) dnx.onclick = () => devNote.classList.remove("on");
     devNote.addEventListener("click", e => { if (e.target === devNote) devNote.classList.remove("on"); });
+  }
+
+  // ----- 분류 기준 한눈에(개념 정립 모달) — 도움말 📐 / 주제로찾기 ⓘ에서 열림 -----
+  const conceptModal = document.getElementById("conceptModal");
+  if (conceptModal) {
+    const ccx = document.getElementById("conceptClose"); if (ccx) ccx.onclick = () => conceptModal.classList.remove("on");
+    conceptModal.addEventListener("click", e => { if (e.target === conceptModal) conceptModal.classList.remove("on"); });
+    document.addEventListener("click", e => { if (e.target.closest("[data-concept]")) { e.preventDefault(); helpMenu.classList.remove("on"); conceptModal.classList.add("on"); } });
   }
 
   // ----- 온보딩 -----

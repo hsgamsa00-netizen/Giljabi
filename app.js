@@ -23,6 +23,7 @@
   document.addEventListener("keydown", e => {
     // ── ESC = 모달 닫기(우선) → 데스크톱 상세 슬라이드오버 닫기(P1 2영역) ──
     if (e.key === "Escape") {
+      const _dn = document.getElementById("devNote"); if (_dn && _dn.classList.contains("on")) { _dn.classList.remove("on"); e.preventDefault(); return; }
       const D = window.Digest;
       if (D && D.isModalOpen && D.isModalOpen()) { D.closeCaseModal(); e.preventDefault(); return; }
       if (document.body.classList.contains("mob-detail") && !window.matchMedia("(max-width:768px)").matches) {
@@ -172,11 +173,12 @@
   document.querySelectorAll(".screenhelp[data-help]").forEach(b => b.onclick = () => runHelp(b.dataset.help));
   document.addEventListener("click", e => { if (helpMenu.classList.contains("on") && !helpMenu.contains(e.target) && e.target.id !== "helpBtn") helpMenu.classList.remove("on"); });
 
-  // ----- 개발자 노트 (헤더 📝 드롭다운 — 알려진 사항·개선 중) -----
+  // ----- 개발자 노트 (헤더 📝 → 알려진 문제점 팝업) -----
   const devNote = document.getElementById("devNote"), devNoteBtn = document.getElementById("devNoteBtn");
   if (devNote && devNoteBtn) {
-    devNoteBtn.onclick = (e) => { e.stopPropagation(); setPanel.classList.remove("on"); helpMenu.classList.remove("on"); devNote.classList.toggle("on"); };
-    document.addEventListener("click", e => { if (devNote.classList.contains("on") && !devNote.contains(e.target) && !devNoteBtn.contains(e.target)) devNote.classList.remove("on"); });
+    devNoteBtn.onclick = (e) => { e.stopPropagation(); setPanel.classList.remove("on"); helpMenu.classList.remove("on"); devNote.classList.add("on"); };
+    const dnx = document.getElementById("devNoteClose"); if (dnx) dnx.onclick = () => devNote.classList.remove("on");
+    devNote.addEventListener("click", e => { if (e.target === devNote) devNote.classList.remove("on"); });
   }
 
   // ----- 온보딩 -----

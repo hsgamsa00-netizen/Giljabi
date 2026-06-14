@@ -14,7 +14,7 @@ window.ScreenGuide = (function () {
       { tab: "tabDash", pane: "board", sel: "#tiles", title: "어디서 — 분야별 분포", desc: "분야별 건수·문책↑ 비율(위험순). 카드를 누르면 그 분야 사례가 우측 ‘관련 사례’에." },
       { tab: "tabDash", pane: "board", sel: ".vpmd", title: "무엇을 → 어떻게", desc: "왼쪽 위반유형 막대를 고르면(①) 오른쪽에 그 유형의 실제 처분 분포(주의·통보·문책 등)가 따라옵니다(②)." },
       { tab: "tabDash", pane: "board", sel: ".band.why", title: "왜 — 원인·배경은 개별 사례에서", desc: "원인·배경은 집계 통계가 아니라 개별 사례에 드러납니다. 위 분포의 막대 클릭 → 선례 목록 → 착안점·적신호·반론·검증에서 확인하세요." },
-      { tab: "tabDash", pane: "active", sel: "#cbrInput", title: "착안점 찾기 — 정황 입력", desc: "점검할 부서·사업·정황을 한 줄로 입력 → 유사 선례·예상 처분·공통 착안점. 결과 아래 ‘반론·검증’(실제 선례)까지." }
+      { tab: "tabDash", pane: "active", sel: "#cbrInput", title: "착안점 찾기 — 정황 입력", desc: "점검할 부서·사업·정황을 한 줄로 입력 → 유사 선례·처분 분포·공통 착안점. 결과 아래 ‘반론·검증’(실제 선례)까지." }
     ],
     digest: [
       { tab: "tabDigest", sel: "#fldGrid", title: "분야로 좁히기", desc: "큰 버튼이 감사 분야. 누르면 위반유형이 펼쳐지고 목록이 그 범위로 좁혀집니다." },

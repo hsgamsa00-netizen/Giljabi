@@ -238,7 +238,7 @@ window.Dashboard = (function () {
     const rfCol = rfs.length
       ? `<div class="cbr-lab">🚩 함께 점검할 적신호 (빈도순)</div>${rfs.slice(0, Math.max(8, aks.length)).map(([r, n]) => `<div class="rfitem">${esc(r)}${n > 1 ? ` <span class="muted">(${n})</span>` : ""}</div>`).join("")}`
       : `<div class="cbr-lab">🚩 적신호</div><div class="muted" style="font-size:12px">적신호 정보 없음</div>`;
-    // 파생 요약(좌측 빈 공간 활용) — 예상 처분 분포 + 자주 적용된 위반법령
+    // 파생 요약(좌측 빈 공간 활용) — 선례 처분 분포 + 자주 적용된 위반법령
     const _dc = {}; top.forEach(c => dispListOf(c).forEach(d => { _dc[d] = (_dc[d] || 0) + 1; }));
     const _dtot = Object.values(_dc).reduce((a, b) => a + b, 0) || 1;
     let _dseg = "", _dleg = ""; DORD.forEach(([nm, cls]) => { if (_dc[nm]) { const p = _dc[nm] / _dtot * 100;
@@ -248,7 +248,7 @@ window.Dashboard = (function () {
     const _lc = {}; top.forEach(c => (Array.isArray(c.위반법령) ? c.위반법령 : (c.위반법령 ? [c.위반법령] : [])).forEach(l => { const k = String(l).replace(/\s*제?\s*\d.*$/, "").trim(); if (k && k.length > 1) _lc[k] = (_lc[k] || 0) + 1; }));
     const _laws = Object.entries(_lc).sort((a, b) => b[1] - a[1]).slice(0, 5);
     const extra = `<div class="cbr-extra">`
-      + `<div class="cbr-lab">📊 예상 처분 분포 <span class="muted">처분요구 ${fmt(_dtot)}건 · 문책 이상 ${Math.round(_hard / _dtot * 100)}%</span></div>`
+      + `<div class="cbr-lab">📊 선례 처분 분포 <span class="muted">처분요구 ${fmt(_dtot)}건 · 문책 이상 ${Math.round(_hard / _dtot * 100)}%</span></div>`
       + `<div class="stack">${_dseg}</div><div class="leg">${_dleg}</div>`
       + (_laws.length ? `<div class="cbr-lab" style="margin-top:11px">⚖️ 자주 적용된 위반법령</div><div class="cbr-exlaw">${_laws.map(([l, n]) => `<span title="${esc(l)}">${esc(l)} <b>${n}</b></span>`).join("")}</div>` : "")
       + `</div>`;
@@ -381,7 +381,7 @@ window.Dashboard = (function () {
       return a; }
     function renderChips() {
       const arr = sortSubs(), shown = chipExpanded ? arr : arr.slice(0, CHIP_SHOW);
-      chipsEl.innerHTML = shown.map(s => `<button class="sachip" type="button" data-sub="${esc(s.k)}" title="‘${esc(s.k)}’ 주제로 유사 선례·예상 처분·착안점 검색 — 전체 ${fmt(s.n)}건(여러 분야 합산)">${esc(s.k)}<span class="sab">${fmt(s.n)}건${s.recent ? " · 최근 " + fmt(s.recent) : ""}</span></button>`).join("")
+      chipsEl.innerHTML = shown.map(s => `<button class="sachip" type="button" data-sub="${esc(s.k)}" title="‘${esc(s.k)}’ 주제로 유사 선례·처분 분포·착안점 검색 — 전체 ${fmt(s.n)}건(여러 분야 합산)">${esc(s.k)}<span class="sab">${fmt(s.n)}건${s.recent ? " · 최근 " + fmt(s.recent) : ""}</span></button>`).join("")
         + (arr.length > CHIP_SHOW ? `<button class="sachip more" type="button" id="saMore">${chipExpanded ? "접기 ▲" : "주제 +" + (arr.length - CHIP_SHOW) + " 더 보기"}</button>` : "");
       chipsEl.querySelectorAll(".sachip[data-sub]").forEach(b => b.onclick = () => { openCbrFor(b.dataset.sub); const p = document.getElementById("saTreePop"); if (p) p.hidden = true; });
       const mb = document.getElementById("saMore"); if (mb) mb.onclick = () => { chipExpanded = !chipExpanded; renderChips(); };

@@ -27,8 +27,8 @@ window.AnalysisTutorial = (function () {
     },
     {
       t: "🔎 착안점 찾기 — 정황 한 줄 → 선례",
-      lead: "점검할 <b>부서·사업·정황을 한 줄</b>로 입력하면, 유사 적발사례·예상 처분·공통 착안점을 모아 줍니다.",
-      ex: `<div class="at-input">수의계약 분할 발주<span class="at-cur">▏</span></div><div class="at-arr">↓</div><div class="at-mc">유사 적발사례 · 예상 처분 분포 · 공통 착안점</div>`
+      lead: "점검할 <b>부서·사업·정황을 한 줄</b>로 입력하면, 유사 적발사례·처분 분포·공통 착안점을 모아 줍니다.",
+      ex: `<div class="at-input">수의계약 분할 발주<span class="at-cur">▏</span></div><div class="at-arr">↓</div><div class="at-mc">유사 적발사례 · 처분 분포 · 공통 착안점</div>`
     },
     {
       t: "🧭 세 갈래 — 막막할 때 · 정했을 때 · 넓힐 때",

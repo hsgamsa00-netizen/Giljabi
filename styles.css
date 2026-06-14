@@ -867,7 +867,7 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 .cbr-col.rf .rfitem{font-size:14px;line-height:1.6;padding:8px 0;margin-bottom:0}   /* 착안점과 폰트·행리듬 통일 · 전체 내용 표시(클램프 없음) */
 .cbr-hint{margin-top:12px;font-size:12px;color:var(--ink);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:8px;padding:8px 11px}
 .cbr-lab{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
-.cbr-extra{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}   /* 좌측 빈 공간 활용 — 검색결과 파생요약(예상 처분·빈출 법령) */
+.cbr-extra{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}   /* 좌측 빈 공간 활용 — 검색결과 파생요약(선례 처분·빈출 법령) */
 .cbr-exlaw{display:flex;flex-wrap:wrap;gap:5px 8px;margin-top:6px}
 .cbr-exlaw span{font-size:11.5px;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cbr-exlaw b{color:var(--accent);font-weight:700;margin-left:2px}

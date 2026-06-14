@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'">
+<title>감사 길잡이</title>
+<meta name="theme-color" content="#2b5b8c">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="감사 길잡이">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+<script>try{if(localStorage.getItem("theme_key")!=="light")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
+</head>
+<body>
+<a href="#mainContent" class="skip-link">본문 바로가기</a>
+
+<div class="top">
+  <div class="in">
+    <div class="brand"><div class="brand-top"><b>감사 길잡이</b><span id="brandSub">· 분석</span></div><div class="brand-src">감사원 공개 감사결과 기반</div></div>
+    <div class="tabs" role="tablist" aria-label="화면 전환">
+      <button id="tabDash" class="on" data-view="dash" role="tab" aria-selected="true" aria-controls="view-dash">📊 분석</button>
+      <button id="tabDigest" data-view="digest" role="tab" aria-selected="false" aria-controls="view-digest">📂 사례 탐색</button>
+      <button id="tabKeep" data-view="keep" role="tab" aria-selected="false" aria-controls="view-keep">⭐ 내 사례함<span class="tabcount" id="keepCount" style="display:none">0</span></button>
+    </div>
+    <div class="search">
+      <input id="q" type="search" placeholder="제목·요지·위반사실·착안점·법령 검색…" aria-label="사례 검색(제목·요지·위반사실·착안점·적신호·법령·감사명)" title='공백=모두 포함 · "따옴표"=정확 구절 · -단어=제외'>
+      <span class="tag n" id="badge">로딩…</span>
+      <button id="helpBtn" class="setbtn helpbtn" title="도움말 — 화면별 사용법·둘러보기" aria-label="도움말">❓</button>
+      <button id="setBtn" class="setbtn" title="법령연동 설정" aria-label="법령연동 설정">⚙️</button>
+    </div>
+  </div>
+</div>
+
+<!-- 설정 패널 -->
+<div class="setpanel" id="setPanel">
+  <h4>⚖️ 법령연동 설정</h4>
+  <p>법제처 OpenAPI <b>OC값</b>을 입력하면 위반법령의 <b>해당 조문</b>을 이 앱 안에서 바로 봅니다. OC는 <a href="https://open.law.go.kr" target="_blank" rel="noopener">open.law.go.kr</a>에서 본인이 직접 무료 발급합니다. <b>기본 미탑재</b> — 이 PC에만 저장됩니다.</p>
+  <input id="ocInput" type="text" placeholder="예: 본인_OC값 (미입력 시 국가법령정보센터로 이동)" autocomplete="off" spellcheck="false" aria-label="법제처 OpenAPI OC값">
+  <div class="setrow">
+    <button class="save" id="ocSave">저장</button>
+    <button id="ocTest">연결 확인</button>
+    <button id="ocClear">지우기</button>
+  </div>
+  <div class="setstat off" id="ocStat">OC 미설정 — 법령 클릭 시 국가법령정보센터로 이동합니다.</div>
+  <div class="setbold">
+    <label><input type="checkbox" id="boldChk"> 위반사실 <b>핵심구 강조(볼드)</b></label>
+    <div class="setboldhint">사례의 핵심 위반 구절을 진하게 표시합니다(빌드타임 추출 기준).</div>
+  </div>
+  <div class="setbold">
+    <label><input type="checkbox" id="flowChk"> 🔗 <b>사건 구조 한 줄 표시</b></label>
+    <div class="setboldhint">상세에서 사건 구조(행위자→행위→결과)와 경과를 한 줄로 보여줍니다.</div>
+  </div>
+  <div class="setbold">
+    <label><input type="checkbox" id="hoverChk"> 🖱 <b>목록 미리보기(마우스 호버)</b></label>
+    <div class="setboldhint">목록에서 제목에 마우스를 올리면 미리보기를 띄웁니다. 끄면 미리보기 없이 위아래로 탐색합니다.</div>
+  </div>
+  <div class="setbold">
+    <label><input type="checkbox" id="darkChk"> 🌙 <b>다크 모드</b></label>
+    <div class="setboldhint">화면 전체를 어두운 테마로 표시합니다. 이 PC에만 저장됩니다.</div>
+  </div>
+</div>
+
+<!-- 도움말 메뉴 (헤더 ❓ 드롭다운 — 어느 탭에서나 상시) -->
+<div class="setpanel helpmenu" id="helpMenu">
+  <h4>❓ 도움말 <span class="hmsub">언제든 여기서</span></h4>
+  <div class="hmguide">
+    <div class="hmglab">처음 익히기 <span>사례로 익히기</span></div>
+    <div class="hmchips">
+      <button class="hmchip" data-help="follow" type="button">✍️ 따라 하기</button>
+      <button class="hmchip" data-help="intro" type="button">👋 시작 화면</button>
+    </div>
+  </div>
+  <div class="hmguide">
+    <div class="hmglab">화면별 사용법 <span>예시로 따라보기</span></div>
+    <div class="hmchips">
+      <button class="hmchip" data-help="digest" type="button">📂 탐색</button>
+      <button class="hmchip" data-help="dash" type="button">📊 분석</button>
+      <button class="hmchip" data-help="keep" type="button">⭐ 내사례함</button>
+    </div>
+  </div>
+  <button class="hmfoot" data-help="about" type="button">ℹ️ 정보·출처 · 공공누리 제4유형</button>
+</div>
+
+<div id="mainContent" tabindex="-1"></div>
+<!-- ===== 탐색(디제스트) ===== -->
+<div id="view-digest" class="view" role="tabpanel" aria-labelledby="tabDigest">
+  <div class="grid">
+    <div class="col left">
+      <div class="sec hero">📁 분류체계 · 분야<span class="scnt" id="fldTot"></span></div>
+      <div class="fldgrid" id="fldGrid"></div>
+      <div class="violsub" id="violSub"><div class="vh" id="violSubH">위반유형</div><div class="vchips" id="violChips"></div><div class="vhint">※ 한 사례가 여러 유형·분야에 해당될 수 있어, 합계가 분야 건수보다 많을 수 있습니다(중복 집계).</div></div>
+      <div class="sec">주제 · 표식 <span class="scnt2">중점점검 · 형사연계 · 세부주제</span></div>
+      <div class="pickwrap">
+        <button class="pickbtn" id="pickBtn" type="button"><span class="ph" id="pickLabel">＋ 주제·표식으로 거르기</span><span class="pickcar">▾</span></button>
+        <div class="pop" id="pickPop" hidden>
+          <input class="pop-sb" id="pickSearch" type="text" placeholder="🔎 주제·표식 검색 (예: 수의계약, 음주, 수사)" aria-label="주제·표식 검색">
+          <div id="pickBody"></div>
+        </div>
+      </div>
+      <div class="sec">연도 <span class="yrbase">· 공개일 기준</span></div>
+      <div class="yrwrap"><div class="yrhead"><b id="yrLabel">전체 연도</b><span class="yrbase" id="yrCnt"></span></div><div class="rangebox" id="yrRange"></div></div>
+      <details class="morefilt"><summary class="morefilt-s">＋ 상세 필터 <span class="mf-sub">기관계열 · 감사종류 · 처분종류</span></summary>
+      <div class="sec">기관계열</div><div class="fac" id="f_gye"></div>
+      <div class="sec">감사종류</div><div class="fac" id="f_knd"></div>
+      <div class="sec">처분종류</div><div class="fac" id="f_disp"></div>
+      </details>
+    </div>
+    <div class="col">
+      <div class="cbar">
+        <div class="res">결과 <b id="nres">0</b>건</div>
+        <div class="crumbs" id="crumbs"></div>
+        <span class="clear" id="clear" style="display:none">전체 해제</span>
+        <button id="fltBtn" class="fltbtn" type="button" aria-label="필터 열기">⚙ 필터</button>
+        <button id="chkBtn" class="cbarbtn" type="button" title="현재 결과의 선례 착안점을 주제 묶음 점검표로">📝 점검표</button>
+        <select id="sortSel" class="subsel sortsel" aria-label="목록 정렬 기준" title="목록 정렬 기준"><option value="new">공개일 최신순</option><option value="old">공개일 오래된순</option><option value="abc">가나다순</option><option value="rand">무작위 탐색</option></select>
+        <button class="screenhelp" data-help="digest" type="button" title="사례 탐색 사용법 — 예시로 따라보기">❔ 이 화면 사용법</button>
+        <button class="prevtgl" id="listHintToggle" type="button" role="switch" aria-checked="true" title="목록 미리보기 — 켜면 제목에 마우스 올릴 때 미리보기, 끄면 미리보기 없이 탐색"><span class="prevtgl-lab">미리보기</span><span class="prevtgl-knob"></span></button>
+      </div>
+      <div id="list"></div>
+    </div>
+    <div class="col right" id="detail"><div class="empty">왼쪽에서 사례를 선택하면<br>위반사실·근거법령·근거페이지·착안점이 표시됩니다.</div></div>
+  </div>
+</div>
+
+<!-- ===== 분석(대시보드) ===== -->
+<div id="view-dash" class="view on" role="tabpanel" aria-labelledby="tabDash">
+  <div class="wrap">
+    <div class="dashhead">
+      <h1>분석</h1>
+      <div class="dsubtabs">
+        <button id="dtBoard" class="dst on" data-pane="board">📋 현황 <span>데이터로 보는 공개 사례</span></button>
+        <button id="dtActive" class="dst" data-pane="active">🔎 착안점 찾기 <span>내 사안으로 선례·착안점</span></button>
+      </div>
+      <button class="screenhelp" data-help="dash" type="button" title="분석 사용법 — 현황·착안점·반론검증 예시">❔ 이 화면 사용법</button>
+    </div>
+
+    <!-- ① 현황 — 데이터 보드 -->
+    <div id="dashBoard" class="dashpane on">
+      <!-- 헤더: KPI 2박스(보조문구 호버) + 공유 필터 -->
+      <div class="dashhdr">
+        <div class="kpis" id="kpis"></div>
+        <div class="hfilt"><div class="ctxsel2" id="ctxSel"></div></div>
+      </div>
+
+      <!-- 누가 — 기관계열별 -->
+      <div class="panel band databoard">
+        <h2 title="어느 기관계열이 · 얼마나 · 어떤 처분 강도 (구성비 100%) · 막대 클릭 → 사례"><span class="bflow">누가</span> 기관계열별 비교 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <div id="whoBox"></div>
+        <details class="profline" id="profPanel"><summary class="profsum">🔎 기관계열별 특화 위반유형</summary><div class="profsel" id="profSel"></div><div class="bars" id="profBox"></div></details>
+      </div>
+
+      <!-- 언제 — 연도별(기본 접기) -->
+      <details class="panel band bandfold">
+        <summary class="bandsum"><span class="bflow">언제</span> 연도별 사례 카드 수 <span class="bhint" title="공개일 기준 · 최근연도 순 · 공개문 1건에서 여러 사례 추출 · 막대 클릭 → 사례" aria-hidden="true">ⓘ</span></summary>
+        <div id="yearBox"></div>
+      </details>
+
+      <!-- 어디서 — 분야별 -->
+      <div class="panel band">
+        <h2 title="관련 사례 수(분야 중복 포함) · 문책↑ 비율 · 카드 클릭 → 사례"><span class="bflow">어디서</span> 분야별 분포 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <div class="tiles" id="tiles"></div>
+      </div>
+
+      <!-- 무엇을 → 어떻게 — 위반유형별 처분 -->
+      <div class="panel band">
+        <h2 title="① 위반유형을 고르면 → ② 그 유형의 처분 비중(공개문 집계)"><span class="bflow">무엇을 → 어떻게</span> 위반유형별 처분 분포 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <div class="vpmd">
+          <div class="bsec bsec-viol"><div class="mdstep"><span class="stepn">1</span>위반유형 고르기 <span class="bhint" title="건수순 정렬 — 고르면 그 유형의 처분 비중이 오른쪽에 표시됩니다" aria-hidden="true">ⓘ</span></div><div class="violsel" id="violSel"></div></div>
+          <div class="bsec bsec-disp" id="yangbox"></div>
+        </div>
+      </div>
+
+      <!-- 왜 — 개별 사례 안내 -->
+      <div class="panel band why">
+        <h2 title="‘왜 발생했나’는 집계 통계가 아니라 개별 사례에 드러납니다"><span class="bflow">왜</span> 원인·배경은 개별 사례에서 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <div class="whybody"><div class="whysteps">분야·위반유형 막대를 클릭하면 선례의 <b>착안점·적신호·반론·검증</b>에서 원인·배경을 확인할 수 있습니다.</div><button class="whygo" id="whyGo" type="button">착안점 찾기로 →</button></div>
+      </div>
+    </div>
+
+    <!-- ② 착안점 찾기 — 입력·드릴 -->
+    <div id="dashActive" class="dashpane">
+      <div class="satop">
+        <div class="cbr-in"><input id="cbrInput" type="text" placeholder="예: 수의계약 분할 발주 / 보조금 정산 자부담 증빙 미비" spellcheck="false" aria-label="상황으로 착안점 찾기 입력"><button id="cbrBtn">찾기</button><button id="cbrReset" class="cbr-reset" type="button" title="검색·결과를 비우고 처음 화면으로">↺ 처음으로</button></div>
+        <div class="sabar"><span class="sabarlab">🧭 무엇을 검색할지 모를 땐</span><button id="saTreeBtn" class="satree-btn satree-btn-lg" type="button" title="자주 적발된 주제·분야별 소주제에서 골라 검색">📂 주제로 찾기 <span class="muted" style="font-weight:500">자주 적발·분야별</span></button><button id="saChkBtn" class="satree-btn satree-btn-lg" type="button" title="현재 주제·검색 범위의 선례 착안점을 사례별로 점검 — 체크하면 메모·내 사례함으로">📋 사례로 점검하기 <span class="muted" style="font-weight:500">주제 범위 사례별</span></button></div>
+      </div>
+      <div class="cols">
+        <div>
+          <div class="panel cbr"><div id="cbrOut"><div class="cbr-empty"><div class="cbr-emt">🔎 상황·키워드로 유사 선례를 찾습니다</div><div class="cbr-emd">위 검색창에 입력하거나, 아래 예시 · <b>📂 주제로 찾기</b>에서 고르세요.</div><div class="cbr-egs"><button class="cbr-eg" type="button" data-q="수의계약 분할 발주">수의계약 분할 발주</button><button class="cbr-eg" type="button" data-q="보조금 정산 자부담 증빙">보조금 자부담 증빙</button><button class="cbr-eg" type="button" data-q="인허가 처리기준 위반">인허가 처리기준</button></div></div></div></div>
+        </div>
+        <aside>
+          <div class="rightwrap">
+            <div class="panel sagraphpanel"><h2>🔗 적발 관계망 <small>함께 적발된 주제의 연결</small><button id="gvOpen" class="gv-expand" type="button" title="크게 보기 — 노드 클릭으로 그래프 탐색">⤢ 크게</button></h2><div class="sagraph" id="saGraph"></div></div>
+            <div class="panel drill">
+              <div class="dh"><b id="drillttl">관련 사례</b><span id="drillInfo" class="drillinfo" hidden title="관련도순 — 검색어가 ①제목 ②소주제 ③요지 ④위반사실 ⑤위반법령 ⑥위반유형에 일치하는 정도를 가중 합산(가중치 제목&gt;소주제&gt;요지&gt;본문·법령&gt;유형). 점수 높은 순으로 표시합니다.">관련도순 ⓘ</span><span class="tag" id="drillcnt">클릭 대기</span><button id="drillBack" class="drillback" type="button" hidden title="착안점 검색 결과(유사 적발사례)로 돌아갑니다">↩ 검색결과로</button><button id="drillClear" class="drillclear" type="button" style="display:none" title="관련 사례를 비웁니다">✕ 비우기</button></div>
+              <div class="casebox" id="casebox"><div class="empty2">왼쪽 검색·칩·관계망을 누르면<br>해당 실제 사례가 여기 나열됩니다.</div></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div id="rebutOut" class="rebutout"></div>
+      <div id="saTreePop" class="satreepop" hidden><div class="satreepop-card"><div class="satreepop-h"><b>📂 주제로 찾기</b> <span class="muted">주제를 누르면 유사 선례·예상 처분·착안점 검색</span><button id="saTreeClose" class="satreepop-x" type="button" title="닫기">✕</button></div><div class="sapop-sec"><div class="sapop-lab">⚡ 자주 적발된 주제 <span class="muted">정렬 기준(사실 축)</span></div><div class="sasort" id="saSort"></div><div class="sachips" id="saChips"></div></div><div class="sapop-sec"><div class="sapop-lab">📁 분야별 전체 <span class="muted">감사원 공개문 분류 · 펼쳐 선택</span></div><div class="satree" id="saTree" role="tree" aria-label="분야별 소주제"></div></div><div class="sahint">※ 건수 = 감사원 공개문 집계 사례 수이며 중요도·난이도가 아닙니다. 위 ‘자주 적발된 주제’는 <b>전체 기준</b>, 분야 펼침 속 건수는 <b>그 분야 안 기준</b>입니다 — 한 사례가 여러 분야에 속할 수 있어 둘이 다를 수 있습니다.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 내 사례함 ===== -->
+<div id="view-keep" class="view" role="tabpanel" aria-labelledby="tabKeep">
+  <div class="wrap">
+    <h1>⭐ 내 사례함 <button class="screenhelp" data-help="keep" type="button" title="내 사례함 사용법">❔ 이 화면 사용법</button></h1>
+    <p class="sub">사례 옆 ⭐를 눌러 담아 둔 사례를 모아 봅니다. (담기 기능 — 모아보기·통계는 추후 확장)</p>
+    <div id="keepList"></div>
+  </div>
+</div>
+
+<!-- 넓은 공용 사례 상세 팝업 -->
+<div class="casemodal" id="caseModal">
+  <div class="casemodal-card" role="dialog" aria-modal="true" aria-labelledby="caseModalTag">
+    <div class="casemodal-h"><b id="caseModalTag">사례 상세</b><button class="cx" id="caseModalClose" title="닫기">✕</button></div>
+    <div class="casemodal-body" id="caseModalBody"></div>
+  </div>
+</div>
+
+<!-- 정보 -->
+<div class="aboutmodal" id="aboutModal">
+  <div class="about-card" role="dialog" aria-modal="true" aria-label="정보 및 출처">
+    <div class="about-h"><div><span class="at">감사 길잡이</span><span class="av">v0.8.122</span></div><button class="ax" id="aboutClose" title="닫기">✕</button></div>
+    <div class="about-by">🏛 화성특례시 감사관 제작</div>
+    <div class="about-desc">감사원 공개 감사결과를 사례 카드로 정리해 착안점·유사 처분례·근거 법령을 빠르게 찾는 <b>개인 업무 참고용</b> 도구입니다.</div>
+    <div class="about-desc about-casual">바이브 코딩이란 걸 알게 돼서 만들었습니다. 개선점 제안이나 버그 제보는 언제나 환영입니다.</div>
+    <div class="about-sign">- 개발자 -</div>
+    <div class="about-rows">
+      <div class="about-row"><span class="ak">개발</span><span>구진규</span></div>
+      <div class="about-row"><span class="ak">연락처</span><span>hsgamsa00@gmail.com, kjk5303@korea.kr</span></div>
+      <div class="about-row"><span class="ak">행정전화</span><span>031-5189-2362</span></div>
+    </div>
+    <div class="about-tech">
+      <div class="alh">🛠 기술 스택</div>
+      <div class="about-rows tech-rows">
+        <div class="about-row"><span class="ak">프론트엔드</span><span>바닐라 JS · CSS · KRDS · PWA</span></div>
+        <div class="about-row"><span class="ak">파이프라인</span><span>Python (수집 · 텍스트추출 · 조립)</span></div>
+        <div class="about-row"><span class="ak">AI 디제스트</span><span>Claude · 로컬 LLM (Ollama · LM Studio)</span></div>
+        <div class="about-row"><span class="ak">배포</span><span>Electron 데스크톱 · GitHub Pages 웹</span></div>
+      </div>
+    </div>
+    <div class="about-legal">
+      <div class="alh">📑 출처 · 저작권 안내</div>
+      <div class="kogl-wrap" data-kogl4></div>
+      <p class="kogl-src"><b>출처표시</b> — 본 「감사 길잡이」는 <b>감사원</b>에서 작성하여 <b>공공누리 제4유형</b>(출처표시＋상업적 이용금지＋변경금지)으로 개방한 <b>감사결과 공개자료</b>를 이용하였으며, 해당 저작물은 <b>감사원 누리집(www.bai.go.kr)</b>에서 무료로 받으실 수 있습니다.</p>
+      <p class="alnote">공공누리 제4유형 이용조건: <a href="https://www.kogl.or.kr/info/licenseType4.do" target="_blank" rel="noopener">www.kogl.or.kr/info/licenseType4.do</a></p>
+      <p>각 사례의 <b>원문은 반드시 감사원 홈페이지(bai.go.kr)에서 확인</b>하시기 바랍니다.</p>
+      <p>화면의 요지·발췌는 <b>교육·연구·업무 참고 목적의 인용</b>(저작권법 §28)으로, 원저작물의 내용을 <b>인용·참조</b>한 것입니다. <b>개인 업무 참고용·비상업</b>으로만 이용합니다.</p>
+      <p class="alnote">관련 법령: 저작권법 §28(공표저작물 인용)·§30(사적이용 복제)·§24-2(공공저작물 자유이용)·§36(번역·개작). ※ 배포 등 사적이용 범위를 벗어날 경우 감사원 협의를 권장합니다.</p>
+    </div>
+    <div class="about-foot">100% 로컬 처리 · 외부 전송 없음 · Electron · MIT License</div>
+  </div>
+</div>
+
+<!-- 기능 둘러보기 투어 -->
+<div class="tour-mask" id="tourMask"></div>
+
+<!-- 플로팅 메모 -->
+<button id="memoFab" class="memo-fab" title="메모">📝</button>
+<div class="memo-panel" id="memoPanel">
+  <div class="memo-h"><b>📝 메모</b><div class="memo-htools"><button id="memoAdd" class="memo-addbtn">＋ 새 메모</button><button id="memoClose" class="memo-x" title="닫기">✕</button></div></div>
+  <div class="memo-list" id="memoList"></div>
+  <div class="memo-foot">현장 의견·착안점을 저장하는 메모입니다 · 이 기기에만 저장(외부 전송 없음) · 첫 줄이 제목이 됩니다.</div>
+</div>
+
+<!-- 법령 조문 팝업 -->
+<div class="lawmodal" id="lawModal">
+  <div class="lawmodal-card" role="dialog" aria-modal="true" aria-labelledby="lawmTitle">
+    <div class="lawmodal-h">
+      <div><div class="lt" id="lawmTitle">조문</div><div class="lsrc" id="lawmSrc"></div></div>
+      <button class="lx" id="lawmClose" title="닫기">✕</button>
+    </div>
+    <div class="lawmodal-body" id="lawmBody"></div>
+    <div class="lawmodal-foot"><span id="lawmEff"></span><a id="lawmExt" href="#" target="_blank" rel="noopener">국가법령정보센터에서 보기 ↗</a></div>
+  </div>
+</div>
+
+<script src="browser-shim.js"></script>
+<!-- R0 데이터 분할 로드 — meta(집계·트리) + 카드 6파트(연도 오름차순·병렬 다운로드·증분 캐시) + join -->
+<script src="cards_meta.js"></script>
+<script src="cards_p1.js"></script>
+<script src="cards_p2.js"></script>
+<script src="cards_p3.js"></script>
+<script src="cards_p4.js"></script>
+<script src="cards_p5.js"></script>
+<script src="cards_p6.js"></script>
+<script src="cards_join.js"></script>
+<script src="kogl.js"></script>
+<script src="onboarding.js"></script>
+<script src="digest.js"></script>
+<script src="graphView.js"></script>
+<script src="dashboard.js"></script>
+<script src="analysisTutorial.js"></script>
+<script src="panelGuide.js"></script>
+<script src="followAlong.js"></script>
+<script src="tour.js"></script>
+<script src="memo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

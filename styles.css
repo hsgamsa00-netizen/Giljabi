@@ -661,20 +661,18 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 .sec:first-child{margin-top:0}
 .sec .scnt{float:right;font-weight:700;color:var(--muted);font-size:11px}
 /* 분류체계 = 큰 버튼형 분야 그리드(A4·최중요·강조) */
-.sec.hero{background:linear-gradient(90deg,#2b5b8c,#3f7cb8);color:#fff;border-left:4px solid #16395c;font-size:13px}
-.sec.hero .scnt{color:#dbe7f3}
+/* (구) .sec.hero — 분류체계·분야 헤더 제거됨(2026-06-14) */
 .fldgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:4px}   /* 기본 2열 유지(분야 10카드=5줄, 1열로 떨어져 10줄로 늘어지는 것 방지) */
-@media(min-width:1500px){.fldgrid{grid-template-columns:repeat(3,1fr)}}   /* 넓으면 3열 */
-@media(min-width:2100px){.fldgrid{grid-template-columns:repeat(4,1fr)}}   /* 더 넓으면 4열 */
+/* 좌측 레일 고정폭(248px) → 데스크톱 2열 고정(3·4열은 좁은 레일서 과밀이라 제거) */
 @media(max-width:640px){.fldgrid{grid-template-columns:1fr}}              /* 모바일 등 매우 좁을 때만 1열 */
 .fldbtn{display:flex;flex-direction:column;gap:1px;padding:8px 7px;border:1px solid var(--accent-line);background:#fff;border-radius:10px;cursor:pointer;text-align:left;transition:.12s;min-width:0;overflow:hidden}
 .fldbtn:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .fldbtn.on{background:var(--accent);border-color:var(--accent)}
-.fldbtn .fn{font-size:11px;font-weight:700;color:var(--ink);line-height:1.25;letter-spacing:-.2px;word-break:keep-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fldbtn .fn{font-size:14px;font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-.2px;white-space:nowrap;overflow:hidden}   /* 1줄 고정 + 확대(긴 분야명은 JS fitFieldNames가 자동 축소해 1줄 유지) */
 .fldbtn .fc{font-size:15px;font-weight:700;color:var(--accent);letter-spacing:0;white-space:nowrap}
 .fldbtn .fcrel,.tile .fcrel{font-size:10px;font-weight:600;color:var(--muted)}
 .fldbtn.on .fn,.fldbtn.on .fc,.fldbtn.on .fcrel{color:#fff}
-.fldnote{grid-column:1 / -1;font-size:11px;color:var(--muted);line-height:1.5;word-break:keep-all;padding:1px 2px 0}
+/* (구) .fldnote — 캡션을 전체사례 버튼 호버 툴팁으로 이전(2026-06-14) */
 .fldbtn.allf{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:center;gap:10px;background:#f1f4f7;border-color:var(--line)}   /* full-width 헤더행: 라벨+건수를 가운데로 모아 좌측 쏠림·중앙 여백 해소 */
 .fldbtn.allf.on{background:var(--accent);border-color:var(--accent)}
 /* 선택 분야의 위반유형 = 하단 펼침 */

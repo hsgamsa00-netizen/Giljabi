@@ -385,16 +385,23 @@ window.Digest = (function () {
 
   // ----- 분야 그리드 + 위반유형 -----
   const FLDORDER = ["계약·조달", "재정·회계", "세무·징수", "보조금·기금", "인사·채용", "공유재산·물품", "인허가·개발", "환경·에너지", "복지·보건", "교통·물류", "도시·주택·건축", "농림·축산·수산", "산업·일자리", "안전·재난", "교육·평생학습", "정보·AI·디지털", "문화·관광·체육", "여성·가족·아동", "공공시설 관리·운영", "일반행정"];   // 20분야(거버넌스7·기능11·시설·일반)
+  function fitFieldNames() {   // 분야 카드명 — 한 줄 유지하며 최대 폰트(긴 이름은 자동 축소). 탭 숨김(폭 0) 시 건너뜀
+    document.querySelectorAll("#fldGrid .fldbtn .fn").forEach(el => {
+      if (!el.clientWidth) return;
+      let s = 14; el.style.fontSize = s + "px";
+      while (s > 9.5 && el.scrollWidth > el.clientWidth) { s -= 0.5; el.style.fontSize = s + "px"; }
+    });
+  }
   function buildFieldGrid() {
     const cnt = {}; NZ.forEach(c => (c.분야 || []).forEach(f => { if (!String(f).startsWith("(")) cnt[f] = (cnt[f] || 0) + 1; }));
     const flds = FLDORDER.filter(f => cnt[f]);
     const grid = document.getElementById("fldGrid");
     const avgF = (Object.values(cnt).reduce((a, b) => a + b, 0) / Math.max(NZ.length, 1)).toFixed(1);
-    grid.innerHTML = `<div class="fldbtn allf${F.fld ? "" : " on"}" role="button" tabindex="0" data-f=""><span class="fn">전체 사례</span><span class="fc">${fmt(NZ.length)}</span></div>` +
-      flds.map(f => `<div class="fldbtn" role="button" tabindex="0" data-f="${esc(f)}"><span class="fn">${esc(f)}</span><span class="fc"><span class="fcrel">관련 </span>${fmt(cnt[f])}</span></div>`).join("") +
-      `<div class="fldnote">※ 한 사례가 평균 ${avgF}개 분야에 속합니다 — 분야 숫자는 관련 사례 수(중복 포함)</div>`;
+    grid.innerHTML = `<div class="fldbtn allf${F.fld ? "" : " on"}" role="button" tabindex="0" data-f="" title="※ 한 사례가 평균 ${avgF}개 분야에 속합니다 — 분야 숫자는 관련 사례 수(중복 포함)"><span class="fn">전체 사례</span><span class="fc">${fmt(NZ.length)}</span></div>` +
+      flds.map(f => `<div class="fldbtn" role="button" tabindex="0" data-f="${esc(f)}"><span class="fn">${esc(f)}</span><span class="fc"><span class="fcrel">관련 </span>${fmt(cnt[f])}</span></div>`).join("");
     grid.querySelectorAll(".fldbtn").forEach(b => b.onclick = () => { const f = b.dataset.f || null; F.fld = (F.fld === f) ? null : f; F.viol = null; render(); });
-    document.getElementById("fldTot").textContent = flds.length + "분야";
+    fitFieldNames();
+    if (!window.__fnFitBound) { window.__fnFitBound = true; window.addEventListener("resize", () => { clearTimeout(window.__fnFitT); window.__fnFitT = setTimeout(fitFieldNames, 150); }); }
   }
   function renderViolSub() {
     const sub = document.getElementById("violSub");
@@ -682,5 +689,5 @@ window.Digest = (function () {
   }
   return { init, setOC, showDetail, openCaseModal, renderKeepList, updateKeepCount, refreshDetail, navList,
     toast, closeCaseModal, getSelId, isModalOpen, openCaseModalSel, toggleKeepSel,
-    isKept, toggleKeep, ovOpen, ovDone };   // 적발 관계망(graphView) 연동용 노출(2026-06-13)
+    isKept, toggleKeep, ovOpen, ovDone, fitFieldNames };   // 적발 관계망(graphView) 연동용 노출(2026-06-13) · fitFieldNames=탭 전환 시 분야명 1줄 재적합
 })();

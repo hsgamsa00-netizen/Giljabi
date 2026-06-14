@@ -17,6 +17,7 @@
     search.style.visibility = (v === "digest") ? "visible" : "hidden";
     const _hm = document.getElementById("helpMenu"); if (_hm) _hm.classList.remove("on");
     if (v === "keep") window.Digest.renderKeepList();
+    if (v === "digest" && window.Digest && window.Digest.fitFieldNames) requestAnimationFrame(() => window.Digest.fitFieldNames());
   }
   Object.keys(tabs).forEach(k => tabs[k].onclick = () => show(k));
   // KRDS 태그 접근성: 칩(span)을 키보드(Enter/Space)로 실행. role=button·tabindex는 빌더에서 부여

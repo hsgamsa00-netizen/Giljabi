@@ -239,7 +239,7 @@ window.Dashboard = (function () {
       ? `<div class="cbr-lab">🚩 함께 점검할 적신호 (빈도순)</div>${rfs.slice(0, Math.max(8, aks.length)).map(([r, n]) => `<div class="rfitem">${esc(r)}${n > 1 ? ` <span class="muted">(${n})</span>` : ""}</div>`).join("")}`
       : `<div class="cbr-lab">🚩 적신호</div><div class="muted" style="font-size:12px">적신호 정보 없음</div>`;
     out.innerHTML = `<div class="cbr-grid">
-        <div class="cbr-col"><div class="cbr-head">유사 적발사례 <b>${fmt(top.length)}</b>건 <span class="muted">(관련도순)</span></div>${warn}<div class="cbr-lab">공통 착안점 (빈도순)</div>${aks.length ? aks.map(([a, n]) => `<div class="aki">${esc(a)}${n > 1 ? ` <span class="muted">(${n})</span>` : ""}</div>`).join("") : '<div class="muted" style="font-size:12px">착안점 정보 없음</div>'}</div>
+        <div class="cbr-col"><div class="cbr-head">유사 선례 <b>${fmt(top.length)}</b>건 <span class="muted">종합 — 공통 착안점·적신호</span></div>${warn}<div class="cbr-lab">공통 착안점 (빈도순)</div>${aks.length ? aks.map(([a, n]) => `<div class="aki">${esc(a)}${n > 1 ? ` <span class="muted">(${n})</span>` : ""}</div>`).join("") : '<div class="muted" style="font-size:12px">착안점 정보 없음</div>'}</div>
         <div class="cbr-col rf">${rfCol}</div>
       </div>`;
     const _vc = {}; top.forEach(c => (c.위반유형 || []).forEach(v => { if (!String(v).startsWith("(")) _vc[v] = (_vc[v] || 0) + 1; }));
@@ -260,11 +260,11 @@ window.Dashboard = (function () {
     const tot = Object.values(cc).reduce((a, b) => a + b, 0) || 1;
     const GRAVE_NM = new Set(["고발", "수사의뢰", "변상판정(유책)", "변상판정(일부)"]);   // 소수 중대처분 — 범례 안에서 색·굵기 강조(별도 줄 중복 제거)
     let segs = "", leg = ""; DORD.forEach(([name, cls]) => { if (cc[name]) { const p = cc[name] / tot * 100;
-      segs += `<span class="seg-${cls}" style="width:${p}%" title="${name} ${cc[name]}">${p >= 9 ? Math.round(p) + "%" : ""}</span>`;
+      segs += `<span class="seg-${cls}" style="width:${p}%" title="${name} ${fmt(cc[name])}건 (${Math.round(p)}%)">${p >= 9 ? Math.round(p) + "%" : ""}</span>`;
       leg += `<span class="${GRAVE_NM.has(name) ? "lg-gv" : ""}"><i class="seg-${cls}"></i>${name} ${fmt(cc[name])}${p >= 1 ? ` (${Math.round(p)}%)` : ""}</span>`; } });   // "(0%)" 제거·중대처분(고발·수사의뢰·변상) 강조
     const mun = (cc["징계·문책요구"] || 0) + (cc["고발"] || 0), hardp = Math.round(mun / tot * 100);
     const ncase = sub.length;   // 선례(사례) 수 — 처분요구 합계(tot)와 구분(복수 처분 시 tot>ncase)
-    document.getElementById("yangbox").innerHTML = `<div class="mdstep"><span class="stepn">2</span>어떻게 — 「${esc(v)}」의 처분 분포 <span class="mdtag" title="한 사례에 복수 처분이 있으면 각 처분을 따로 셉니다(자체감사 매뉴얼의 처분요구별 건수 산정).">선택 위반유형 · 처분요구 기준</span></div><div class="stack">${segs}</div><div class="leg">${leg}</div>
+    document.getElementById("yangbox").innerHTML = `<div class="mdstep"><span class="stepn">2</span>어떻게 — 「${esc(v)}」의 처분 분포 <span class="bhint" title="선택 위반유형 · 처분요구 기준 — 한 사례에 복수 처분이 있으면 각 처분을 따로 셉니다(자체감사 매뉴얼의 처분요구별 건수 산정).">ⓘ</span></div><div class="stack">${segs}</div><div class="leg">${leg}</div>
       <div class="yint">📊 <b>${esc(v)}</b> 선례 <b>${fmt(ncase)}</b>건 · 처분요구 <b>${fmt(tot)}</b>건 중 문책 이상 <b>${hardp}%</b> <button class="yview" data-v="${esc(v)}">→ 이 유형 선례 ${fmt(ncase)}건 보기</button></div>`;
     const btn = document.querySelector(".yview"); if (btn) btn.onclick = () => drillTo(`양정 · ${v}`, sub);
   }

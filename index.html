@@ -75,7 +75,7 @@
         <span class="dn-title">📝 개발자 노트 <span class="dn-sub">알려진 문제점 · 개선 중</span></span>
         <button class="dn-x" id="devNoteClose" type="button" aria-label="닫기">✕</button>
       </div>
-      <div class="dn-meta">v0.8.131</div>
+      <div class="dn-meta">v0.8.132</div>
       <div class="dn-lead">현재 확인·개선 중인 사항입니다.</div>
       <ul class="dnlist">
         <li>
@@ -171,26 +171,26 @@
 
       <!-- 누가 — 기관계열별 -->
       <div class="panel band databoard">
-        <h2 title="어느 기관계열이 · 얼마나 · 어떤 처분 강도 (구성비 100%) · 막대 클릭 → 사례"><span class="bflow">누가</span> 기관계열별 비교 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <h2 title="어느 기관계열이 · 얼마나 · 어떤 처분 강도 (구성비 100%) · 막대 클릭 → 사례">기관계열별 비교 <span class="bflow">누가</span> <span class="bhint" aria-hidden="true">ⓘ</span></h2>
         <div id="whoBox"></div>
         <details class="profline" id="profPanel"><summary class="profsum">🔎 기관계열별 특화 위반유형</summary><div class="profsel" id="profSel"></div><div class="bars" id="profBox"></div></details>
       </div>
 
       <!-- 언제 — 연도별(기본 접기) -->
       <details class="panel band bandfold">
-        <summary class="bandsum"><span class="bflow">언제</span> 연도별 사례 카드 수 <span class="bhint" title="공개일 기준 · 최근연도 순 · 공개문 1건에서 여러 사례 추출 · 막대 클릭 → 사례" aria-hidden="true">ⓘ</span></summary>
+        <summary class="bandsum">연도별 사례 카드 수 <span class="bflow">언제</span><span class="bhint" title="공개일 기준 · 최근연도 순 · 공개문 1건에서 여러 사례 추출 · 막대 클릭 → 사례" aria-hidden="true">ⓘ</span></summary>
         <div id="yearBox"></div>
       </details>
 
       <!-- 어디서 — 분야별 -->
       <div class="panel band">
-        <h2 title="관련 사례 수(분야 중복 포함) · 문책↑ 비율 · 카드 클릭 → 사례"><span class="bflow">어디서</span> 분야별 분포 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <h2 title="관련 사례 수(분야 중복 포함) · 문책↑ 비율 · 카드 클릭 → 사례">분야별 분포 <span class="bflow">어디서</span><span class="bhint" aria-hidden="true">ⓘ</span></h2>
         <div class="tiles" id="tiles"></div>
       </div>
 
       <!-- 무엇을 → 어떻게 — 위반유형별 처분 -->
       <div class="panel band">
-        <h2 title="① 위반유형을 고르면 → ② 그 유형의 처분 비중(공개문 집계)"><span class="bflow">무엇을 → 어떻게</span> 위반유형별 처분 분포 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <h2 title="① 위반유형을 고르면 → ② 그 유형의 처분 비중(공개문 집계)">위반유형별 처분 분포 <span class="bflow">무엇을 → 어떻게</span><span class="bhint" aria-hidden="true">ⓘ</span></h2>
         <div class="vpmd">
           <div class="bsec bsec-viol"><div class="mdstep"><span class="stepn">1</span>위반유형 고르기 <span class="bhint" title="건수순 정렬 — 고르면 그 유형의 처분 비중이 오른쪽에 표시됩니다" aria-hidden="true">ⓘ</span></div><div class="violsel" id="violSel"></div></div>
           <div class="bsec bsec-disp" id="yangbox"></div>
@@ -199,7 +199,7 @@
 
       <!-- 왜 — 개별 사례 안내 -->
       <div class="panel band why">
-        <h2 title="‘왜 발생했나’는 집계 통계가 아니라 개별 사례에 드러납니다"><span class="bflow">왜</span> 원인·배경은 개별 사례에서 <span class="bhint" aria-hidden="true">ⓘ</span></h2>
+        <h2 title="‘왜 발생했나’는 집계 통계가 아니라 개별 사례에 드러납니다">원인·배경은 개별 사례에서 <span class="bflow">왜</span><span class="bhint" aria-hidden="true">ⓘ</span></h2>
         <div class="whybody"><div class="whysteps">분야·위반유형 막대를 클릭하면 선례의 <b>착안점·적신호·반론·검증</b>에서 원인·배경을 확인할 수 있습니다.</div><button class="whygo" id="whyGo" type="button">착안점 찾기로 →</button></div>
       </div>
     </div>
@@ -216,11 +216,11 @@
         </div>
         <aside>
           <div class="rightwrap">
-            <div class="panel sagraphpanel"><h2>🔗 적발 관계망 <small>함께 적발된 주제의 연결</small><button id="gvOpen" class="gv-expand" type="button" title="크게 보기 — 노드 클릭으로 그래프 탐색">⤢ 크게</button></h2><div class="sagraph" id="saGraph"></div></div>
             <div class="panel drill">
               <div class="dh"><b id="drillttl">관련 사례</b><span id="drillInfo" class="drillinfo" hidden title="관련도순 — 검색어가 ①제목 ②소주제 ③요지 ④위반사실 ⑤위반법령 ⑥위반유형에 일치하는 정도를 가중 합산(가중치 제목&gt;소주제&gt;요지&gt;본문·법령&gt;유형). 점수 높은 순으로 표시합니다.">관련도순 ⓘ</span><span class="tag" id="drillcnt">클릭 대기</span><button id="drillBack" class="drillback" type="button" hidden title="착안점 검색 결과(유사 적발사례)로 돌아갑니다">↩ 검색결과로</button><button id="drillClear" class="drillclear" type="button" style="display:none" title="관련 사례를 비웁니다">✕ 비우기</button></div>
               <div class="casebox" id="casebox"><div class="empty2">왼쪽 검색·칩·관계망을 누르면<br>해당 실제 사례가 여기 나열됩니다.</div></div>
             </div>
+            <div class="panel sagraphpanel"><h2>🔗 적발 관계망 <small>함께 적발된 주제의 연결</small><button id="gvOpen" class="gv-expand" type="button" title="크게 보기 — 노드 클릭으로 그래프 탐색">⤢ 크게</button></h2><div class="sagraph" id="saGraph"></div></div>
           </div>
         </aside>
       </div>
@@ -250,7 +250,7 @@
 <!-- 정보 -->
 <div class="aboutmodal" id="aboutModal">
   <div class="about-card" role="dialog" aria-modal="true" aria-label="정보 및 출처">
-    <div class="about-h"><div><span class="at">감사 길잡이</span><span class="av">v0.8.131</span></div><button class="ax" id="aboutClose" title="닫기">✕</button></div>
+    <div class="about-h"><div><span class="at">감사 길잡이</span><span class="av">v0.8.132</span></div><button class="ax" id="aboutClose" title="닫기">✕</button></div>
     <div class="about-by">🏛 화성특례시 감사관 제작</div>
     <div class="about-desc">감사원 공개 감사결과를 사례 카드로 정리해 착안점·유사 처분례·근거 법령을 빠르게 찾는 <b>개인 업무 참고용</b> 도구입니다.</div>
     <div class="about-desc about-casual">바이브 코딩이란 걸 알게 돼서 만들었습니다. 개선점 제안이나 버그 제보는 언제나 환영입니다.</div>

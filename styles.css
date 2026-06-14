@@ -296,6 +296,14 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 .modebtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .modebtn small{display:block;font-size:11px;font-weight:500;opacity:.8;margin-top:1px}
 .cols{display:grid;grid-template-columns:1fr 400px;gap:18px;align-items:start}   /* start: 짧은 칼럼이 빈 박스로 늘어나지 않게(반론은 전체 폭 하단으로 분리) */
+@media(min-width:1081px){   /* H: 착안점 찾기 좌·우 칼럼 하단 끝선 정렬 — 같은 높이 + 긴 목록 내부 스크롤 */
+  #dashActive.searched .cols{align-items:stretch;max-height:calc(100vh - 150px)}
+  #dashActive.searched .cols>div{display:flex;flex-direction:column;min-width:0}
+  #dashActive.searched .cols .panel.cbr{flex:1;min-height:0;overflow:auto}
+  #dashActive.searched .rightwrap{position:static;height:100%}
+  #dashActive.searched .rightwrap>.drill{flex:1;min-height:0;display:flex;flex-direction:column}
+  #dashActive.searched .rightwrap>.drill .casebox{flex:1;min-height:0;overflow:auto}
+}
 .rebutout:not(:empty){margin-top:2px}
 .rebut-panel{margin-bottom:0}
 .panel{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent-line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);margin-bottom:9px}
@@ -468,7 +476,7 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 
 /* ════ 6하원칙 현황 재편 (누가·언제·어디서·무엇을→어떻게·왜) ════ */
 /* 헤더: KPI 2박스(보조문구 호버) + 공유 필터 */
-.dashhdr{display:block;margin-bottom:12px}   /* P1: KPI 4개 제거 → 기관/분야 선택바 단독 전폭 */
+.dashhdr{display:block;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}   /* P1: KPI 4개 제거 → 기관/분야 선택바 단독 전폭 · 아래 6하원칙 현황과 구분선으로 분리 */
 .kpis:empty{display:none}
 .hfilt .ctxrow-1{display:flex;align-items:center;gap:7px 10px;flex-wrap:wrap;width:100%}   /* 기관·분야 — 가로 스크롤 없이 유동 줄바꿈(폰트 키워도 스크롤바 안 생김) */
 .hfilt .ctxrow-1 .ctxchips{flex-wrap:wrap;overflow:visible}
@@ -494,7 +502,7 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 .band>h2[title]{cursor:help}   /* P1: 캡션 → 호버 툴팁 */
 .bhint{font-size:11px;font-weight:500;color:var(--muted2);cursor:help;margin-left:1px;align-self:center}
 .bhint:hover{color:var(--accent)}
-.bflow{font-size:var(--text-meta);font-weight:700;letter-spacing:.02em;color:var(--muted);background:#f1f3f6;border:1px solid var(--line);border-radius:6px;padding:2px 8px;flex:none}  /* P0: 강조색 5회 반복 → 중립 라벨(강조 변별력 회복) */
+.bflow{font-size:var(--text-meta);font-weight:700;letter-spacing:.02em;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;flex:none}  /* P0: 강조색 5회 반복 → 중립 라벨 · 배경 변수화(다크에서 흰바탕+흐린글씨 해소) */
 .band>h2 .ptakeaway{display:inline;font-size:12px;font-weight:500;color:var(--muted);margin:0}
 .band>h2 .ptakeaway b{color:var(--accent);font-weight:700}
 /* 어디서: 분야 10카드 1줄 + 콤팩트(대표 1개+등) */
@@ -532,7 +540,8 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 .mdtag{font-size:11px;font-weight:600;color:var(--muted);margin-left:6px}
 @media(max-width:1040px){.vpmd{grid-template-columns:1fr}}
 /* 범례(.leg — 기존 정의 부재였음 → 신설: 스와치+간격) */
-.leg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:12px;color:var(--ink);line-height:1.5}
+.leg{display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;font-size:12px;color:var(--ink);line-height:1.5}
+.leg>span{white-space:nowrap}   /* 항목 단위 줄바꿈(음절 중간에서 안 끊김) · 가급적 1줄, 넘치면 항목 경계에서만 */
 .leg>span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .leg>span>i{width:10px;height:10px;border-radius:3px;flex:none;display:inline-block}
 /* 왜: 안내 밴드 */
@@ -551,7 +560,7 @@ html[data-theme="dark"] .rb-q,html[data-theme="dark"] .rb-q2,html[data-theme="da
 .bar.hot .track>i{background:var(--accent)}
 .bar.hot .bv b{color:var(--accent)}
 .bar:not(.hot){opacity:.72}
-.yview{display:inline-block;margin-left:8px;font-size:12px;font-weight:700;color:var(--accent);background:#fff;border:1px solid var(--accent-line);border-radius:7px;padding:3px 9px;cursor:pointer}
+.yview{display:block;width:fit-content;margin:9px 0 0;font-size:12px;font-weight:700;color:var(--accent);background:#fff;border:1px solid var(--accent-line);border-radius:7px;padding:5px 11px;cursor:pointer}   /* 요약 텍스트와 분리 — 별도 줄 */
 .yview:hover{background:var(--accent-soft)}
 .yint{font-size:13px;background:#f7f9fb;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;margin-top:12px;line-height:1.5}
 .cols2{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:6px}
@@ -1286,7 +1295,7 @@ button:disabled,.btn:disabled,.docbtn:disabled,.copybtn:disabled,.setrow button:
 .dtl-scrim{display:none}   /* 모바일 미사용(데스크톱 슬라이드오버 배경 스크림) */
 /* ===== P1 구조재편 — 데스크톱 탐색 2영역(좌 필터레일 + 우 목록, 상세=우측 슬라이드오버+스크림) 2026-06-13 ===== */
 @media(min-width:769px){
-  #view-digest .grid{grid-template-columns:248px minmax(0,1fr)}   /* 2영역: 필터레일 248 + 목록(전폭 유지·찌그러지지 않음) */
+  #view-digest .grid{grid-template-columns:248px minmax(0,1fr);column-gap:8px}   /* 2영역: 필터레일 248 + 목록(전폭 유지·찌그러지지 않음) · 좌측 필터↔목록 살짝 간격 */
   #view-digest .col.right{position:fixed;top:57px;right:0;bottom:0;left:auto;width:min(880px,62vw);z-index:26;overflow:auto;
     background:var(--card);border-left:1px solid var(--line);box-shadow:-14px 0 40px rgba(17,24,39,.20);
     transform:translateX(102%);transition:transform .2s ease;padding:18px 26px 56px}

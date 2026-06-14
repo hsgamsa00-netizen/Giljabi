@@ -115,7 +115,7 @@
     oc ? setStat("onc", "OC 설정됨 — 위반법령에서 조문을 팝업으로 봅니다.") : setStat("off", "OC 미설정 — 법령 클릭 시 국가법령정보센터로 이동합니다.");
   }
   async function loadOC() { try { const s = await window.api.settings.get(); const oc = (s && s.lawApiOc) || ""; window.Digest.setOC(oc); ocInput.value = oc; refreshStat(oc); } catch (e) { refreshStat(""); } }
-  document.getElementById("setBtn").onclick = () => { const hm = document.getElementById("helpMenu"); if (hm) hm.classList.remove("on"); setPanel.classList.toggle("on"); if (setPanel.classList.contains("on")) loadOC(); };
+  document.getElementById("setBtn").onclick = () => { const hm = document.getElementById("helpMenu"); if (hm) hm.classList.remove("on"); const dn = document.getElementById("devNote"); if (dn) dn.classList.remove("on"); setPanel.classList.toggle("on"); if (setPanel.classList.contains("on")) loadOC(); };
   document.getElementById("ocSave").onclick = async () => { const oc = ocInput.value.trim(); try { await window.api.settings.set({ lawApiOc: oc }); } catch (e) {} window.Digest.setOC(oc); refreshStat(oc); };
   document.getElementById("ocClear").onclick = async () => { try { await window.api.settings.set({ lawApiOc: "" }); } catch (e) {} ocInput.value = ""; window.Digest.setOC(""); refreshStat(""); };
   document.getElementById("ocTest").onclick = async () => {
@@ -165,11 +165,19 @@
   document.getElementById("helpBtn").onclick = (e) => {
     e.stopPropagation();
     setPanel.classList.remove("on");
+    const dn = document.getElementById("devNote"); if (dn) dn.classList.remove("on");
     helpMenu.classList.toggle("on");
   };
   helpMenu.addEventListener("click", (e) => { const b = e.target.closest("[data-help]"); if (b) runHelp(b.dataset.help); });
   document.querySelectorAll(".screenhelp[data-help]").forEach(b => b.onclick = () => runHelp(b.dataset.help));
   document.addEventListener("click", e => { if (helpMenu.classList.contains("on") && !helpMenu.contains(e.target) && e.target.id !== "helpBtn") helpMenu.classList.remove("on"); });
+
+  // ----- 개발자 노트 (헤더 📝 드롭다운 — 알려진 사항·개선 중) -----
+  const devNote = document.getElementById("devNote"), devNoteBtn = document.getElementById("devNoteBtn");
+  if (devNote && devNoteBtn) {
+    devNoteBtn.onclick = (e) => { e.stopPropagation(); setPanel.classList.remove("on"); helpMenu.classList.remove("on"); devNote.classList.toggle("on"); };
+    document.addEventListener("click", e => { if (devNote.classList.contains("on") && !devNote.contains(e.target) && !devNoteBtn.contains(e.target)) devNote.classList.remove("on"); });
+  }
 
   // ----- 온보딩 -----
   function openIntro() { window.Onboarding.open({ onFollow: () => { clearTimeout(_hintT); openFollow(); }, onDone: () => scheduleHint(400) }); }

@@ -98,6 +98,18 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard GOV"
 .setpanel p{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.5}
 .setpanel input{width:100%;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;outline:none}
 .setpanel input:focus{border-color:var(--accent)}
+/* 개발자 노트 — 헤더 텍스트 버튼 + 드롭다운(알려진 사항·개선 중) */
+.devnotebtn{width:auto;padding:0 9px;gap:4px;display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;white-space:nowrap;color:var(--ink)}
+.devnotebtn .dndot{width:6px;height:6px;border-radius:50%;background:var(--warn);flex:0 0 auto}
+.devnote{width:340px}
+.devnote .dnlead{margin:0 0 10px;font-size:12px;color:var(--muted);line-height:1.55}
+.devnote .dnlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.devnote .dnlist li{border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:9px 11px;background:var(--soft)}
+.devnote .dnt{font-size:12.5px;font-weight:700;margin-bottom:4px;color:var(--ink);line-height:1.45}
+.devnote .dnd{font-size:12px;color:var(--ink);line-height:1.55}
+.devnote .dnmut{color:var(--muted);display:block;margin-top:3px}
+.devnote .dnfoot{margin-top:10px;font-size:11px;color:var(--muted);text-align:right}
+@media(max-width:768px){.devnotebtn{width:32px;padding:0;justify-content:center}.devnotebtn .dnlabel{display:none}}
 .setrow{display:flex;gap:7px;margin-top:9px}
 .setrow button{flex:1;font-size:13px;font-weight:700;border-radius:8px;padding:8px;cursor:pointer;border:1px solid var(--line);background:#fff}
 .setrow button.save{background:var(--accent);color:#fff;border-color:var(--accent)}

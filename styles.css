@@ -1018,6 +1018,7 @@ html[data-theme="dark"] .screenhelp.pulse-hint{animation:hintpulseDark 2.2s ease
 /* 정보·출처 — 작은 footer 링크 */
 .hmfoot{display:block;width:100%;text-align:center;font-size:11px;color:var(--muted);background:none;border:0;padding:6px 4px 2px;margin-top:3px;cursor:pointer}
 .hmfoot:hover{color:var(--accent);text-decoration:underline}
+.helpmenu .hmdl{text-decoration:none;color:var(--accent);font-weight:700}   /* 데스크톱 설치파일 다운로드 링크 */
 .screenhelp{margin-left:auto;font-size:var(--text-meta);font-weight:500;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer;white-space:nowrap}  /* P0: accent 채움 → 중립 보조버튼(도구바 색경쟁 제거) */
 .screenhelp:hover{background:#f1f3f6;color:var(--ink);border-color:var(--accent-line)}
 .dashhead .screenhelp{align-self:center}

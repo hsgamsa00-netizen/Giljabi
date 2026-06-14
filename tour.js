@@ -67,6 +67,7 @@ window.ScreenGuide = (function () {
     setTimeout(() => {
       const el = st.sel ? document.querySelector(st.sel) : null;
       if (st.sel && !el && st.optional) return next();
+      if (el) { const _d = el.closest("details"); if (_d && !_d.open) _d.open = true; }   // 접힌 섹션(연도별 등) 펼쳐 하이라이트 좌표 정확히
       if (el) { try { el.scrollIntoView({ block: "center", inline: "nearest" }); } catch (e) {} }
       setTimeout(() => place(st, el, i), el ? 70 : 0);
     }, wait);
